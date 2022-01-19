@@ -6,11 +6,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage){
 
         Label label = new Label("Hello ");
         label.setAlignment(Pos.CENTER);
