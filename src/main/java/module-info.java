@@ -8,6 +8,8 @@ module com.example.technicalexercise {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires java.sql;
+    requires mysql.connector.java;
 
     opens com.example.technicalexercise to javafx.fxml;
     exports View;
