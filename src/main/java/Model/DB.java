@@ -76,8 +76,20 @@ public class DB {
   }
 
   //this method adds a sale to the database
-  public void CreateSale(String date, int customerId, int salesPersonId, int productId){
+  public void CreateSale(String date, int customerId, int salesPersonId, int productId) throws SQLException {
 
+    myStmt.executeUpdate(("INSERT INTO `Sales`(SalesDate,Products_ProductID,SalesPerson_SalesPersonId,Customer_CustomerId) VALUE ('"+date+"','"+productId+"','"+salesPersonId+"',"+customerId+")"));
+    System.out.println("Added Suscefully");
+
+    myConn.close();
+  }
+
+  //this method adds a new salesperson to the database
+  public void AddSalesPerson(int salesPersonId, String salesPersonFname, String salesPersonLName, String salesPersonAddres, String salesPersonPhoneNumber,
+                             Date salesPersonStartDate, String salesPersonManager, String salesPersonTermination) throws SQLException {
+    myStmt.executeUpdate(
+            ("INSERT INTO `SalesPerson`(FirstName,LastName,Address,Phone,StartDate,TerminationDate,Manager,SalesPersonId) VALUE ('"+salesPersonFname+"','"+salesPersonLName+"','"+salesPersonAddres+"','"+salesPersonPhoneNumber+"','"+salesPersonStartDate+"','"+salesPersonTermination+"','"+salesPersonManager+"',"+salesPersonId+")"));
+    System.out.println("Sales Person Added Suscefully");
   }
 
 

@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import org.controlsfx.control.action.Action;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 
 public class MainStage extends Application {
@@ -88,9 +89,42 @@ public class MainStage extends Application {
         createNewSaleButton.setPrefSize(150, 100);
         createNewSaleButton.getStyleClass().add("rich-blue");
         createNewSaleButton.setId("record-sales");
+        createNewSaleButton.setOnAction(ActionEvent -> {
+            try {
+                getCreateSaleStage();
+            } catch (SQLException e) {
+                System.out.println("Error Completing Sale");
+                e.printStackTrace();
+            }
+        });
+
+        //ADD SALES PERSON BUTTON
+        Button addSalesPersonButton = new Button("   Add New\n Sales Person");
+        addSalesPersonButton.setPrefSize(150, 100);
+        addSalesPersonButton.getStyleClass().add("rich-blue");
+        addSalesPersonButton.setId("record-sales");
+        addSalesPersonButton.setOnAction(ActionEvent -> {
+            try {
+                getAddSalesPerson();
+            } catch (SQLException e) {
+                System.out.println("Error Adding Sales Person");
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //ADD buttons hbox
+        HBox addButtonHbox = new HBox();
+        addButtonHbox.setPadding(new Insets(15, 12, 15, 12));
+        addButtonHbox.setSpacing(50);
+        addButtonHbox.setAlignment(Pos.CENTER);
+
+        addButtonHbox.getChildren().addAll(addSalesPersonButton,createNewSaleButton);
+
 
         //add everything to a Vbox
-        VBox vbox = new VBox(titleLabel, buttonsHbox, createNewSaleButton);
+        VBox vbox = new VBox(titleLabel, buttonsHbox, addButtonHbox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
         VBox.setMargin(titleLabel, new Insets(50,0,150,0));
@@ -118,6 +152,14 @@ public class MainStage extends Application {
 
     public void getSalesPersonStage() throws SQLException {
         ViewSalesPersonStage viewSalesPersonStage = new ViewSalesPersonStage();
+    }
+
+    public void getCreateSaleStage() throws SQLException {
+        CreateSaleStage createSaleStage = new CreateSaleStage();
+    }
+
+    public void getAddSalesPerson() throws SQLException, ParseException {
+            AddSalesPersonStage addSalesPersonStage = new AddSalesPersonStage();
     }
 
     public static void main(String[] args) {
