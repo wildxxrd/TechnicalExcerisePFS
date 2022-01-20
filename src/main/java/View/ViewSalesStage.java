@@ -1,16 +1,26 @@
 package View;
 
+import Controller.StageController;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class ViewSalesStage extends Stage {
-    //sets the title of the stage
-        ViewSalesStage() {
-            Label label = new Label("hello world");
+import java.sql.*;
 
-            this.setTitle("Add New Dog");
-            this.setScene(new Scene( label,275, 200));
-            this.show();
-        }
+public class ViewSalesStage extends Stage {
+        StageController stageController;
+
+    ViewSalesStage() throws SQLException {
+        String stageName = "sales"; //string to get the right scene from controller
+        Stage stage = new Stage();
+        stageController = new StageController();
+        //Main Scene
+        Scene scene = new Scene(stageController.getData(stageName), 500, 320);
+        stage.setTitle("Sales");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+
+
 }

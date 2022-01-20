@@ -1,6 +1,8 @@
 package View;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,6 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import org.controlsfx.control.action.Action;
+
+import java.sql.SQLException;
 
 
 public class MainStage extends Application {
@@ -24,18 +29,50 @@ public class MainStage extends Application {
         Button salesButton = new Button("View Sales");
         salesButton.setPrefSize(150, 100);
         salesButton.getStyleClass().add("rich-blue");
+        salesButton.setOnAction(ActionEvent -> {
+            try {
+                getViewSalesStage();
+            } catch (SQLException e) {
+                System.out.println("Error Loading Sales Screen");
+                e.printStackTrace();
+            }
+        });
         //customer button
         Button customerButton = new Button("View Customers");
         customerButton.setPrefSize(150, 100);
         customerButton.getStyleClass().add("rich-blue");
+        customerButton.setOnAction(ActionEvent -> {
+            try {
+                getCustomerStage();
+            } catch (SQLException e) {
+                System.out.println("Error Loading Sales Customers Screen");
+                e.printStackTrace();
+            }
+        });
         //products button
         Button productsButton = new Button("View Products");
         productsButton.setPrefSize(150, 100);
         productsButton.getStyleClass().add("rich-blue");
+        productsButton.setOnAction(ActionEvent -> {
+            try {
+                getProductStage();
+            } catch (SQLException e) {
+                System.out.println("Error Loading Products Screen");
+                e.printStackTrace();
+            }
+        });
         //sales person button
         Button salesPersonButton = new Button("View Sales\n   Person");
         salesPersonButton.setPrefSize(150, 100);
         salesPersonButton.getStyleClass().add("rich-blue");
+        salesPersonButton.setOnAction(ActionEvent -> {
+            try {
+                getSalesPersonStage();
+            } catch (SQLException e) {
+                System.out.println("Error Loading Sales Person Screen");
+                e.printStackTrace();
+            }
+        });
 
         //Hbox to hold the buttons
         HBox buttonsHbox = new HBox();
@@ -65,6 +102,22 @@ public class MainStage extends Application {
         stage.setTitle("BeSpocked Bicycle Company");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void getViewSalesStage() throws SQLException {
+        ViewSalesStage start = new ViewSalesStage();
+    }
+
+    public void getCustomerStage() throws SQLException {
+        ViewCustomerStage viewCustomerStage = new ViewCustomerStage();
+    }
+
+    public void getProductStage() throws SQLException {
+        ViewProductsStage viewProductsStage = new ViewProductsStage();
+    }
+
+    public void getSalesPersonStage() throws SQLException {
+        ViewSalesPersonStage viewSalesPersonStage = new ViewSalesPersonStage();
     }
 
     public static void main(String[] args) {
