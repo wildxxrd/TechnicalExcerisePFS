@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class AddSalesPersonStage {
@@ -24,7 +23,7 @@ public class AddSalesPersonStage {
     private String salesPersonLastName;
     private final String terminationDate = "N/A"; //set to N/A since when adding new sales person termination is not required
     private String salesPersonManager;
-    private String salesPersonAdress;
+    private String salesPersonAddress;
     StageController stageController;
 
     public AddSalesPersonStage() throws SQLException, ParseException {
@@ -46,7 +45,7 @@ public class AddSalesPersonStage {
         startDateTextField.setDisable(true);
         Label startDateLabel = new Label("Start Date:");
 
-        //Hbox for the date date texfield
+        //Vbox for the date text field
         HBox startDateHbox = new HBox(startDateLabel, startDateTextField);
         startDateHbox.setAlignment(Pos.CENTER);
 
@@ -61,9 +60,9 @@ public class AddSalesPersonStage {
         salesPersonLastNameTextField.setPromptText("ENTER LAST NAME");
 
         //address
-        TextField salesPersonAdressTextField = new TextField();
-        salesPersonAdressTextField.setMaxWidth(220);
-        salesPersonAdressTextField.setPromptText("ENTER CURRENT ADDRESS");
+        TextField salesPersonAddressTextField = new TextField();
+        salesPersonAddressTextField.setMaxWidth(220);
+        salesPersonAddressTextField.setPromptText("ENTER CURRENT ADDRESS");
         //phone
         TextField salesPersonPhoneTextField = new TextField();
         salesPersonPhoneTextField.setMaxWidth(220);
@@ -80,7 +79,7 @@ public class AddSalesPersonStage {
         salesPersonIdTextField.setPromptText("ENTER NEW SALES PERSON ID");
 
 
-        Button addButton = new Button("Create Sale");
+        Button addButton = new Button("Add New Person");
         //add button action
         addButton.setOnAction(ActionEvent -> {
             try {
@@ -88,12 +87,20 @@ public class AddSalesPersonStage {
                 salesPersonFirstName = salesPersonFirstNameTextField.getText();// sales person first name
                 salesPersonLastName = salesPersonLastNameTextField.getText();// sales person last name
                 salesPersonManager = salesPersonManagerTextField.getText();// sales person manager
-                salesPersonAdress = salesPersonAdressTextField.getText();//sales person address
+                salesPersonAddress = salesPersonAddressTextField.getText();//sales person address
                 salesPersonPhoneNumber = salesPersonPhoneTextField.getText();// sales person phone
 
                 //calls the create sale method passing the form information
                 stageController.addSalesPerson(salesPersonID,salesPersonFirstName,salesPersonLastName,
-                        salesPersonAdress,salesPersonPhoneNumber, sqlStartDate,terminationDate,salesPersonManager);
+                        salesPersonAddress,salesPersonPhoneNumber, sqlStartDate,terminationDate,salesPersonManager);
+
+                //empty the text fields
+                salesPersonAddressTextField.clear();
+                salesPersonFirstNameTextField.clear();
+                salesPersonIdTextField.clear();
+                salesPersonLastNameTextField.clear();
+                salesPersonManagerTextField.clear();
+                salesPersonPhoneTextField.clear();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -104,14 +111,14 @@ public class AddSalesPersonStage {
         createSaleVbox.setSpacing(20);
         VBox.setMargin(createSaleVbox, new Insets(50,50,150,50));
 
-        //add ndes to Vbox
+        //add nodes to Vbox
         createSaleVbox.getChildren().addAll(createSaleTitleLabel,startDateTextField,salesPersonIdTextField,salesPersonFirstNameTextField,salesPersonLastNameTextField
-                ,salesPersonAdressTextField,salesPersonPhoneTextField,salesPersonManagerTextField,addButton);
+                ,salesPersonAddressTextField,salesPersonPhoneTextField,salesPersonManagerTextField,addButton);
         stageController = new StageController();
         Stage stage = new Stage();
         //Main Scene
         Scene scene = new Scene(createSaleVbox, 820, 620);
-        stage.setTitle("Create Sale");
+        stage.setTitle("Add New Sales Person");
         stage.setScene(scene);
         stage.show();
     }

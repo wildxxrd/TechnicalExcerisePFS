@@ -1,17 +1,14 @@
 package View;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import org.controlsfx.control.action.Action;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -99,7 +96,7 @@ public class MainStage extends Application {
         });
 
         //ADD SALES PERSON BUTTON
-        Button addSalesPersonButton = new Button("   Add New\n Sales Person");
+        Button addSalesPersonButton = new Button("    Add New\n Sales Person");
         addSalesPersonButton.setPrefSize(150, 100);
         addSalesPersonButton.getStyleClass().add("rich-blue");
         addSalesPersonButton.setId("record-sales");
@@ -107,7 +104,23 @@ public class MainStage extends Application {
             try {
                 getAddSalesPerson();
             } catch (SQLException e) {
-                System.out.println("Error Adding Sales Person");
+                System.out.println("Error Loading Sales Person Stage");
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
+
+            //ADD PRODUCT BUTTON
+        Button addProductButton = new Button("  Add New\n  Product");
+        addProductButton.setPrefSize(150, 100);
+        addProductButton.getStyleClass().add("rich-blue");
+        addProductButton.setId("record-sales");
+        addProductButton.setOnAction(ActionEvent -> {
+            try {
+                getAddProductStage();
+            } catch (SQLException e) {
+                System.out.println("Error Loading Add Product Stage");
                 e.printStackTrace();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -120,7 +133,7 @@ public class MainStage extends Application {
         addButtonHbox.setSpacing(50);
         addButtonHbox.setAlignment(Pos.CENTER);
 
-        addButtonHbox.getChildren().addAll(addSalesPersonButton,createNewSaleButton);
+        addButtonHbox.getChildren().addAll(addSalesPersonButton,createNewSaleButton,addProductButton);
 
 
         //add everything to a Vbox
@@ -139,27 +152,31 @@ public class MainStage extends Application {
     }
 
     public void getViewSalesStage() throws SQLException {
-        ViewSalesStage start = new ViewSalesStage();
+        new ViewSalesStage();
     }
 
     public void getCustomerStage() throws SQLException {
-        ViewCustomerStage viewCustomerStage = new ViewCustomerStage();
+        new ViewCustomerStage();
     }
 
     public void getProductStage() throws SQLException {
-        ViewProductsStage viewProductsStage = new ViewProductsStage();
+        new ViewProductsStage();
     }
 
     public void getSalesPersonStage() throws SQLException {
-        ViewSalesPersonStage viewSalesPersonStage = new ViewSalesPersonStage();
+        new ViewSalesPersonStage();
     }
 
     public void getCreateSaleStage() throws SQLException {
-        CreateSaleStage createSaleStage = new CreateSaleStage();
+        new CreateSaleStage();
     }
 
     public void getAddSalesPerson() throws SQLException, ParseException {
-            AddSalesPersonStage addSalesPersonStage = new AddSalesPersonStage();
+        new AddSalesPersonStage();
+    }
+
+    public void getAddProductStage() throws SQLException, ParseException {
+        new AddProductStage();
     }
 
     public static void main(String[] args) {

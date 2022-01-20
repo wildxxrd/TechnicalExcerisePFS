@@ -4,27 +4,36 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 import java.sql.*;
 /*
-* This class is responsible of connecting and getting
+* This class is responsible for connecting and getting
 * All the needed information from the database
 * */
 public class DB {
   ObservableList<ObservableList> data;
   //table view obj that will be returned
-  private TableView tableView;
+  private final TableView tableView;
   //connection obj
-  private Connection myConn;
+  private final Connection myConn;
   Statement myStmt;
+  //Alert
+  Alert errorAlert;
+  Alert confirmationAlert;
+
+  //constructor starts the connection
   public DB() throws SQLException {
+    errorAlert = new Alert(Alert.AlertType.ERROR);
+    confirmationAlert = new Alert(AlertType.INFORMATION);
     tableView = new TableView();
 
     String dbURL = "jdbc:mysql://localhost:3306/BeSpockedDB"; //url
-    String user = "admin";  // user name
+    String user = "admin";  // username
     String pass = "Ilovejava22!"; //password
 
     //SQL connection variables
@@ -66,7 +75,7 @@ public class DB {
 
       }
 
-      //Finally add data to TableView
+      //Finally, add data to TableView
       tableView.setItems(data);
     } catch (Exception e) {
       e.printStackTrace();
@@ -77,25 +86,56 @@ public class DB {
 
   //this method adds a sale to the database
   public void CreateSale(String date, int customerId, int salesPersonId, int productId) throws SQLException {
-
-    myStmt.executeUpdate(("INSERT INTO `Sales`(SalesDate,Products_ProductID,SalesPerson_SalesPersonId,Customer_CustomerId) VALUE ('"+date+"','"+productId+"','"+salesPersonId+"',"+customerId+")"));
-    System.out.println("Added Suscefully");
+    try {
+      myStmt.executeUpdate(("INSERT INTO `Sales`(SalesDate,Products_ProductID,SalesPerson_SalesPersonId,Customer_CustomerId) VALUE ('" + date + "','" + productId + "','" + salesPersonId + "'," + customerId + ")"));
+      confirmationAlert.setTitle("Sales Created Successfully");
+      confirmationAlert.setHeaderText("Sales Created Successfully");
+      confirmationAlert.showAndWait();
+    }catch (SQLIntegrityConstraintViolationException e){
+      errorAlert.setTitle("ID Number Entered Does Not Exist");
+      errorAlert.setHeaderText("One of The ID Entered Does Not Exist");
+      errorAlert.setContentText("Sales Person ID Starts With a 3000\nCustomers ID Starts With a 1000\nProduct ID Starts With a 2000");
+      errorAlert.showAndWait();
+    }
 
     myConn.close();
   }
 
+  //this method adds a product to the database
+  public void CreateProduct(String productName, int productQuantity, int commission, double productPrice, String productManufacturer, String productStyle, int productId) throws SQLException {
+    try {
+        myStmt.executeUpdate(("INSERT INTO `Products`(Name,Manufacturer,Style,PurchasePrice,QtyOnHand,CommissionPercentage,ProductID) VALUE ('" + productName + "','" + productManufacturer + "','" + productStyle + "','" + productPrice + "','" + productQuantity + "','" + commission + "'," + productId + ")"));
+        confirmationAlert.setTitle("Product Added Successfully");
+        confirmationAlert.setHeaderText("New Product Added!");
+        confirmationAlert.showAndWait();
+    }catch (SQLException e){
+        errorAlert.setTitle("Error Creating New Product");
+        errorAlert.setHeaderText("Error Creating New Product");
+    }
+    myConn.close();
+  }
+
   //this method adds a new salesperson to the database
-  public void AddSalesPerson(int salesPersonId, String salesPersonFname, String salesPersonLName, String salesPersonAddres, String salesPersonPhoneNumber,
+  public void AddSalesPerson(int salesPersonId, String salesPersonFirstName, String salesPersonLastName, String salesPersonAddress, String salesPersonPhoneNumber,
                              Date salesPersonStartDate, String salesPersonManager, String salesPersonTermination) throws SQLException {
-    myStmt.executeUpdate(
-            ("INSERT INTO `SalesPerson`(FirstName,LastName,Address,Phone,StartDate,TerminationDate,Manager,SalesPersonId) VALUE ('"+salesPersonFname+"','"+salesPersonLName+"','"+salesPersonAddres+"','"+salesPersonPhoneNumber+"','"+salesPersonStartDate+"','"+salesPersonTermination+"','"+salesPersonManager+"',"+salesPersonId+")"));
-    System.out.println("Sales Person Added Suscefully");
+    try {
+      myStmt.executeUpdate(
+              ("INSERT INTO `SalesPerson`(FirstName,LastName,Address,Phone,StartDate,TerminationDate,Manager,SalesPersonId) VALUE ('" + salesPersonFirstName + "','" + salesPersonLastName + "','" + salesPersonAddress + "','" + salesPersonPhoneNumber + "','" + salesPersonStartDate + "','" + salesPersonTermination + "','" + salesPersonManager + "'," + salesPersonId + ")"));
+      confirmationAlert.setTitle("Product Added Successfully");
+      confirmationAlert.setHeaderText("Product Added Successfully");
+      confirmationAlert.showAndWait();
+    }catch (SQLIntegrityConstraintViolationException e){
+      errorAlert.setTitle("Error Adding Sales Person");
+      errorAlert.setHeaderText("The ID Number You Entered is Already in The System");
+      errorAlert.setContentText(null);
+      errorAlert.showAndWait();
+    }
   }
 
 
-  //this method takes the name of the stage that calls it ]
-  //then returns the appropiate sql statement
-  //i created this method to reduce duplicate code
+  //this method takes the name of the stage that calls it
+  //then returns the appropriate sql statement
+  //I created this method to reduce duplicate code
   private String validateSQL(String stageName){
     String sql = "";
     if (stageName.equalsIgnoreCase("customer")) {
@@ -112,7 +152,7 @@ public class DB {
                     INNER JOIN Products ON Sales.Products_ProductID = Products.ProductID
                     INNER JOIN SalesPerson ON Sales.SalesPerson_SalesPersonId = SalesPerson.SalesPersonId;""";
     }else if (stageName.equalsIgnoreCase("product")){
-      sql = "SELECT Name, Manufacturer, Style, CONCAT(PurchasePrice ,'$') AS \"Purchase Price\", QtyOnHand AS 'Quantity on Hand', CONCAT(CommissionPercentage, '%') AS \"Commission Percentage\", CONCAT(ProductID) AS \"Producrt ID\"\n" +
+      sql = "SELECT Name, Manufacturer, Style, CONCAT(PurchasePrice ,'$') AS \"Purchase Price\", QtyOnHand AS 'Quantity on Hand', CONCAT(CommissionPercentage, '%') AS \"Commission Percentage\", CONCAT(ProductID) AS \"Product ID\"\n" +
               "FROM Products";
     }else if (stageName.equalsIgnoreCase("salesPerson")){
       sql = "Select CONCAT(FirstName) AS \"Sales Person First Name\", CONCAT(LastName) AS \"Sales Person Last Name\",Address, Phone, CONCAT(StartDate) AS \"Start Date\",CONCAT(TerminationDate) AS \"Termination Date\", Manager, CONCAT(SalesPersonId) AS \"Sales Person ID\"\n" +

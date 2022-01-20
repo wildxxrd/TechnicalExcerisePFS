@@ -1,11 +1,6 @@
 package View;
 
 import Controller.StageController;
-import com.dlsc.formsfx.model.structure.Field;
-import com.dlsc.formsfx.model.structure.Form;
-import com.dlsc.formsfx.model.structure.Group;
-import com.dlsc.formsfx.view.renderer.FormRenderer;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,7 +24,6 @@ public class CreateSaleStage{
     public CreateSaleStage() throws SQLException {
         String pattern = "yyyy-MM-dd";
         String dateInString = new SimpleDateFormat(pattern).format(new Date());
-        String stageName = "createSale";
 
         //Title Label
         Label createSaleTitleLabel = new Label("Sale Information");
@@ -41,7 +35,7 @@ public class CreateSaleStage{
         salesDateTextField.setMaxWidth(220);
         Label dateLabel = new Label("Date:");
 
-        //Hbox for the date date texfield
+        //Hbox for the date text field
         HBox dateHbox = new HBox(dateLabel, salesDateTextField);
             dateHbox.setAlignment(Pos.CENTER);
         TextField customerIdTextField = new TextField();
@@ -77,7 +71,7 @@ public class CreateSaleStage{
         createSaleVbox.setSpacing(20);
         VBox.setMargin(createSaleVbox, new Insets(50,50,150,50));
 
-        //add ndes to Vbox
+        //add node to Vbox
         createSaleVbox.getChildren().addAll(createSaleTitleLabel,dateHbox,salesPersonIdTextField,customerIdTextField,productIdTextField,addButton);
         stageController = new StageController();
         Stage stage = new Stage();
